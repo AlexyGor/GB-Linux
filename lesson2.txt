@@ -1,0 +1,21 @@
+cd /home/all
+sudo su
+cd
+ls -al
+cd snap
+cd
+pwd
+cat > test_file
+ls -al
+cd snap/
+cat ../test_file
+cp test_file test2
+cp -r vm-shara/ test2
+mv test_file vm-shara
+cd vm-shara
+ls -al
+cd
+mc
+sudo apt install quadrapassel -y
+sudo apt-get remove qudrapassel -y
+sudo apt install vim 

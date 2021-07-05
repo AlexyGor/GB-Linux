@@ -1,0 +1,36 @@
+cat /etc/fstab
+blkid
+df -Th
+mkdir test
+cd test
+ls -al
+ln test_file test_ln
+cat > test_ln
+ ls -al
+ln test_file test_ln2
+ls -ail
+ln -s test_file test_lns
+ls -al
+ln 
+sudo chgrp adm test_file
+ls -al
+umask
+touch test_umask
+chmod 664 test_umask
+ls -al
+chmod u=rwx,g=r,o=rw test_umask
+ls -al
+chmod -R g-x test_umask
+chmod 000 test_file
+ls -al /usr/bin/passwd
+sudo chmod g+s test
+sudo chgrp www-data test
+ls -al
+touch test_sgid
+umask 002
+touch test_sgid2
+mkdir test_sgid_child
+sudo chmod +t test_sgid_child/
+sudo chattr +i test_file2
+lsattr
+

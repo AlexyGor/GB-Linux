@@ -1,0 +1,50 @@
+1. Написать скрипт, который удаляет из текстового файла пустые строки и заменяет маленькие символы на большие. Воспользуйтесь tr или SED.
+
+sed '/^$/d' lesson6_examples.txt
+tr -s '\n' < lesson6_examples.txt
+
+2. Создать скрипт, который создаст директории для нескольких годов (2010–2017), в них — поддиректории для месяцев (от 01 до 12), и в каждый из них запишет несколько файлов с произвольными записями. Например, 001.txt, содержащий текст «Файл 001», 002.txt с текстом «Файл 002» и т. д.
+
+for pf in ./task2/{2010..2020}/{01..12}/{001..005}; do
+  mkdir -p "$(dirname $pf)" && echo "Файл $(echo $pf | cut -d '/' -f 5)" > "$pf.txt"
+done
+
+3. * Использовать команду AWK на вывод длинного списка каталога, чтобы отобразить только права доступа к файлам. Затем отправить в конвейере этот вывод на sort и uniq, чтобы отфильтровать все повторяющиеся строки.
+ls -l|awk '{print $1}'|sort -u|grep -vi 'итого'
+
+4. Используя grep, проанализировать файл /var/log/syslog, отобрав события на своё усмотрение.
+grep -i ' CRON' /var/log/syslog | awk '!($1=$2=$3=$5="")'|uniq
+all  (root) CMD ( cd / && run-parts --report /etc/cron.hourly)
+   all  (root) CMD (test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily ))
+   all  (root) CMD (test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly ))
+   all  (root) CMD ( cd / && run-parts --report /etc/cron.hourly)
+   all  (root) CMD ([ -x /etc/init.d/anacron ] && if [ ! -d /run/systemd/system ]; then /usr/sbin/invoke-rc.d anacron start >/dev/null; fi)
+   all  (root) CMD ( cd / && run-parts --report /etc/cron.hourly)
+   all  (ing) CMD (env DISPLAY=:0 /usr/bin/python3 /notifier.py '\320\237\320\276\321\200\320\260 \320\277\321\200\320\270\320\275\321\217\321\202\321\214!!!')
+   all  (root) CMD ( cd / && run-parts --report /etc/cron.hourly)
+   all  (root) CMD ( test -x /etc/cron.daily/popularity-contest && /etc/cron.daily/popularity-contest --crond)
+   all  (root) CMD ( cd / && run-parts --report /etc/cron.hourly)
+   all  (root) CMD (apt autoclean)
+   all  (CRON) info (No MTA installed, discarding output)
+   all  (root) CMD ( cd / && run-parts --report /etc/cron.hourly)
+
+5. Создать разовое задание на перезагрузку операционной системы, используя at.
+
+sudo at -f /sbin/reboot 6:00pm 10/06/2021
+warning: commands will be executed using /bin/sh
+job 1 at Mon Nov 30 18:00:00 2020
+sudo atq
+sudo atrm 1
+sudo atq
+
+6. * Написать скрипт, делающий архивную копию каталога etc, и прописать задание в crontab.
+
+BACKUPS_DIR="/media/data/devel/backups"
+BACKUP_FILE="$(date +%F-%H-%M-%S).tar.gz"
+
+if [ ! -d $BACKUPS_DIR ]; then
+    mkdir -p "$BACKUPS_DIR"
+fi
+
+tar -czf "$BACKUPS_DIR/$BACKUP_FILE" /etc 2>/dev/null
+

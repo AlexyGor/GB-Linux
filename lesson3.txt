@@ -1,0 +1,20 @@
+useradd -s /bin/bash -d /home/user -m user_test
+sudo password user_test
+
+sudo adduser usertest2
+sudo usermod -aG sudo usertest2
+sudo deluser usertest2
+sudo deluser --remove-home usertest2
+
+groupadd testgroup
+groupadd: group 'testgroup' already exists
+groupadd -f testgroup
+groupadd -g 1234 testgroup
+getent group | grep testgroup
+testgroup:x:1234:
+groupadd: GID '1234' already exists
+groupadd -p grouppassword testgroup
+
+
+all ALL=(ALL) NOPASSWD:ALL /usr/bin/cat
+%sudo ALL=(ALL) NOPASSWD:ALL

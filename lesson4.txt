@@ -1,0 +1,48 @@
+1. Потоки ввода/вывода. Создать файл, используя команду echo. Используя команду cat, прочитать содержимое каталога etc, ошибки перенаправить в отдельный файл.
+
+ll task1.txt
+ls: невозможно получить доступ к 'task1.txt': Нет такого файла или каталога
+echo > task1.txt
+ll task1.txt
+-rw-rw-r-- 1 ing ing 1 ноя 24 21:40 task1.txt
+cat task1.txt
+cat /etc/* >task1.txt 2>task1_err.txt
+ll task1*
+-rw-rw-r-- 1 ing ing   6640 ноя 24 21:41 task1_err.txt
+-rw-rw-r-- 1 ing ing    658 ноя 24 21:42 task1.md
+-rw-rw-r-- 1 ing ing 491255 ноя 24 21:41 task1.txt
+cat task1_err.txt 
+cat: /etc/acpi: Это каталог
+cat: /etc/alternatives: Это каталог
+cat: /etc/apache2: Это каталог
+cat: /etc/apm: Это каталог
+cat: /etc/apparmor: Это каталог
+
+
+2. Конвейер (pipeline). Использовать команду cut на вывод длинного списка каталога, чтобы отобразить только права доступа к файлам. Затем отправить в конвейере этот вывод на sort и uniq, чтобы отфильтровать все повторяющиеся строки.
+ll -ld /etc/* | cut -f1 -d " " | sort | uniq
+ll -ld /etc/* | cut -f1 -d " " | sort -u
+
+
+3. Управление процессами.) Изменить конфигурационный файл службы SSH: /etc/ssh/sshd_config, отключив аутентификацию по паролю PasswordAuthentication no. Выполните рестарт службы systemctl restart sshd (service sshd restart), верните аутентификацию по паролю, выполните reload службы systemctl reload sshd (services sshd reload). В чём различие между действиями restart и reload? Создайте файл при помощи команды cat > file_name, напишите текст и завершите комбинацией ctrl+d.
+
+на reload процессу будет отправлен SIGHUP
+на restart - зависит от ряда параметров, таких как 
+[KillMode=](https://www.freedesktop.org/software/systemd/man/systemd.kill.html#KillMode=), 
+[Restart=](https://www.freedesktop.org/software/systemd/man/systemd.service.html#Restart=) 
+и некоторых других, но как правило процессу шлется SIGTERM.
+И как следствие разница в том, что в случае SIGHUP процесс перечитывает конфиг 
+и начинает работать с новыми настройками (далеко не всегда завершая текущие сессии),
+а в случае SIGTERM пытается освободить все занятые ресурсы, проводит различные действия 
+по завершению работы и нормально завершается.
+
+
+4. Сигналы процессам. Запустите mc. Используя ps, найдите PID процесса, завершите процесс, передав ему сигнал 9.
+
+mcedit
+ll
+ps ax|grep mc
+kill -9  1700
+ps ax|grep mc
+ll
+
